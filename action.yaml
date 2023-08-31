@@ -6,5 +6,8 @@ inputs:
     required: true
     default: 'World'
 runs:
-  using: bash
-  run: script.sh
+  using: composite
+  steps:
+    - name: Test
+      shell: bash
+      run: script.sh
