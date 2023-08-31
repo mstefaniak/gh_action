@@ -11,7 +11,7 @@ runs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        repository: mstefaniak/gh_actions
+        repository: mstefaniak/gh_action
         ref: main
         path: test
     
