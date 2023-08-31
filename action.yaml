@@ -14,10 +14,6 @@ runs:
         repository: mstefaniak/gh_action
         ref: main
         path: action
-    
-    - name: Debug
-      shell: bash
-      run: ls -la test
     - name: Test
       shell: bash
       run: action/script.sh
