@@ -17,7 +17,7 @@ runs:
     
     - name: Debug
       shell: bash
-      run: ls -la
+      run: ls -la test
     - name: Test
       shell: bash
-      run: script.sh
+      run: test/script.sh
