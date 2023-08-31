@@ -13,11 +13,11 @@ runs:
       with:
         repository: mstefaniak/gh_action
         ref: main
-        path: test
+        path: action
     
     - name: Debug
       shell: bash
       run: ls -la test
     - name: Test
       shell: bash
-      run: test/script.sh
+      run: action/script.sh
