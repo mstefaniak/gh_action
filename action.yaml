@@ -8,6 +8,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Debug
+      shell: bash
+      run: |
+        echo "vars ${{ vars.MYVAR }}"
+        echo "secrets ${{ secrets.TEST }}"
     - name: Checkout
       uses: actions/checkout@v3
       with:
