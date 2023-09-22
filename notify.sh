@@ -24,5 +24,4 @@ if [ "$valid" = true ]; then
   echo "valid=true" | tee -a $GITHUB_OUTPUT
 else
   echo "valid=false" | tee -a $GITHUB_OUTPUT
-  exit 1
 fi
