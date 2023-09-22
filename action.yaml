@@ -1,19 +1,43 @@
-name: Test Action
-description: Test Action
+name: Validate Command Deploy Params
+description: Validates the command deploy parameters
 inputs:
-  name:
-    description: 'Name of the person to greet'
+  comment-id:
+    description: The comment id to update
     required: true
-    default: 'World'
+  environment:
+    description: The environment to deploy to
+    required: true
+  namespaces:
+    description: The namespace(s) to deploy to
+    required: true
+outputs:
+  valid:
+    description: Whether the parameters are valid
+    value: ${{ steps.validate-params.outputs.valid }}
 runs:
   using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        repository: mstefaniak/gh_action
-        ref: main
-        path: action
-    - name: Test
+    - name: Validate deploy-command parameters
+      id: validate-params
       shell: bash
-      run: action/script.sh
+      run: ${{ github.action_path }}/notify.sh ${{ inputs.environment }} ${{ inputs.namespaces }}
+    - name: Create URL to the run
+      id: create-url
+      shell: bash
+      run: echo "runUrl=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
+    - name: Update comment with success message
+      if: steps.validate-params.outputs.valid == 'true'
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        comment-id: ${{ inputs.comment-id }}
+        body: |
+          The branch is getting deployed to `${{ inputs.environment }} ${{ inputs.namespaces }}` now
+          Workflow: ${{ steps.create-url.outputs.runUrl }}
+    - name: Invalid environment
+      if: steps.validate-params.outputs.valid == 'false'
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        comment-id: ${{ inputs.comment-id }}
+        reactions: '-1'
+        body: |
+          The given environment `${{ inputs.environment }} ${{ inputs.namespaces }}` is not valid :x:
