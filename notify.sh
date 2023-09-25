@@ -26,5 +26,5 @@ if [ "$VALID" = true ]; then
   echo "valid=true" | tee -a $GITHUB_OUTPUT
 else
   echo "valid=false" | tee -a $GITHUB_OUTPUT
-  echo "error_messages='${ERROR_MESSAGES[@]'" | tee -a $GITHUB_OUTPUT
+  echo "error_messages='${ERROR_MESSAGES[@]}'" | tee -a $GITHUB_OUTPUT
 fi
