@@ -11,9 +11,18 @@ inputs:
     description: The namespace(s) to deploy to
     required: true
 outputs:
+  error_messages:
+    description: The error messages
+    value: ${{ steps.validate-params.outputs.error_messages }}
   valid:
     description: Whether the parameters are valid
     value: ${{ steps.validate-params.outputs.valid }}
+  valid_env:
+    description: Validated environment name
+    value: ${{ steps.validate-params.outputs.valid_env }}
+  valid_namespaces:
+    description: Validated namespace(s) name
+    value: ${{ steps.validate-params.outputs.valid_namespace }}
 runs:
   using: composite
   steps:
