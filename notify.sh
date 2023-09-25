@@ -6,6 +6,7 @@ IFS=',' read -ra NAMESPACES <<< "$2"
 ALLOWED_ENVS=( staging1 staging2 staging3 staging4 staging5 staging6 staging7 staging8 staging9 staging10 staging11 staging12 staging13 qa1 qa2 )
 ALLOWED_NAMESPACES=( uk de us )
 
+VALID=true
 ERROR_MESSAGES=()
 
 if [[ ! " ${ALLOWED_ENVS[@]} " =~ " ${ENV} " ]]; then
