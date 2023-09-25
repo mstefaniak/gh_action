@@ -42,5 +42,5 @@ runs:
         comment-id: ${{ inputs.comment-id }}
         reactions: '-1'
         body: |
-          :x: ${{ join(fromJSON(steps.validate-params.outputs.error_messages), " ") }}
+          :x: \n ${{ fromJSON(steps.validate-params.outputs.error_messages) }}
           
