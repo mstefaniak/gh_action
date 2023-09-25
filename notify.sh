@@ -10,13 +10,13 @@ ERROR_MESSAGES=()
 
 if [[ ! " ${ALLOWED_ENVS[@]} " =~ " ${ENV} " ]]; then
   VALID=false
-  ERROR_MESSAGES+=("Not supported environment: `${ENV}`, following environments are supported: `${ALLOWED_ENVS[@]}`")
+  ERROR_MESSAGES+=("Not supported environment: \`${ENV}\`, following environments are supported: \`${ALLOWED_ENVS[@]}\`")
 fi
 
 for NAMESPACE in "${NAMESPACES[@]}"; do
   if [[ ! " ${ALLOWED_NAMESPACES[@]} " =~ " ${NAMESPACE} " ]]; then
     VALID=false
-    ERROR_MESSAGES+=("Not supported namespace(s) `${NAMESPACES}`, following namespaces are supported: `${ALLOWED_NAMESPACES[@]}`")
+    ERROR_MESSAGES+=("Not supported namespace(s) \`${NAMESPACES}\`, following namespaces are supported: \`${ALLOWED_NAMESPACES[@]}\`")
   fi
 done
 
