@@ -33,6 +33,8 @@ runs:
         body: |
           The branch is getting deployed to `${{ inputs.environment }} ${{ inputs.namespaces }}` now
           Workflow: ${{ steps.create-url.outputs.runUrl }}
+          Env: ${{ steps.validate-params.outputs.valid_env }}
+          Namespaces: ${{ steps.validate-params.outputs.valid_namespaces }}
     - name: Invalid environment
       if: steps.validate-params.outputs.valid == 'false'
       uses: peter-evans/create-or-update-comment@v3
@@ -40,4 +42,5 @@ runs:
         comment-id: ${{ inputs.comment-id }}
         reactions: '-1'
         body: |
-          The given environment `${{ inputs.environment }} ${{ inputs.namespaces }}` is not valid :x:
+          ${{steps.validate-params.outputs.error_messages}}
+          
