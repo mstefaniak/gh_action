@@ -10,7 +10,7 @@ inputs:
   comment-id:
     description: The comment id to update
     required: true
-    
+
 runs:
   using: composite
   steps:
@@ -37,6 +37,6 @@ runs:
       uses: peter-evans/create-or-update-comment@v3
       with:
         comment-id: ${{ inputs.comment-id }}
-        body: ${{ steps.prepare-msg.outputs.body }}
-        reactions: ${{ steps.prepare-msg.outputs.reactions }}
+        body: ${{ fromJSON(steps.prepare-msg.outputs.body) }}
+        reactions: ${{ fromJSON(steps.prepare-msg.outputs.reactions) }}
           
