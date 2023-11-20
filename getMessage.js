@@ -16,20 +16,20 @@ const getMessage = (result) => {
     if (result === 'skipped') {
       return {
         body: '> :fast_forward: The deployment has been skipped (no changes detected). To force a deployment, add `[force=true]` to your commit command.',
-        reactions: null,
+        reactions: '+1',
       }
     }
   
     if (result === 'cancelled') {
       return {
         body: '> :rewind: The deployment has been cancelled',
-        reactions: null,
+        reactions: '+1',
       }
     }
   
     return {
       body: '> :question: The deployment has an unknown status',
-      reactions: null,
+      reactions: '-1',
     }
   }
   
