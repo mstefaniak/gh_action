@@ -29,7 +29,7 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}
       env:
-        RESULT: ${{ steps.prepare-result.outputs.result }}
+        RESULT: ${{ fromJSON(steps.prepare-result.outputs.result) }}
       run: |
         node ./message.js $RESULT
 
