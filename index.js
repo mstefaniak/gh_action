@@ -44,22 +44,24 @@ async function getMergedPullRequest(
 
   const q = encodeURIComponent(`repo:${owner}/${repo} type:pr is:merged hash:${sha}`)
   console.log('query:', q)
-  const { data: alternativeList } = octokit.rest.search.issuesAndPullRequests({
+  const { data: alternativeList, error: error1 } = octokit.rest.search.issuesAndPullRequests({
     q,
     sort: 'updated',
     order: 'desc',
     per_page: 100
   })
+  console.error('error:', error1)
   console.info('alternative List:', alternativeList)
 
-  const q2 = encodeURIComponent(`repo:${owner}/${repo} type:pr`)
+  const q2 = `repo:${owner}/${repo} type:pr`
   console.log('query 2:', q)
-  const { data } = octokit.rest.search.issuesAndPullRequests({
+  const { data, error: error2 } = octokit.rest.search.issuesAndPullRequests({
     q: q2,
     sort: 'updated',
     order: 'desc',
     per_page: 100
   })
+  console.error('error:', error2)
   console.info('alternative List 2:', data)
 
 
