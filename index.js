@@ -42,7 +42,7 @@ async function getMergedPullRequest(
 ) {
   const octokit = github.getOctokit(githubToken)
 
-  const q = `repo:"${owner}/${repo}"+is:pr+is:merged+${sha}`
+  const q = encodeURIComponent(`repo:${owner}/${repo} type:pr is:merged hash:${sha}`)
   console.log('query:', q)
   const { data: alternativeList } = octokit.rest.search.issuesAndPullRequests({
     q,
@@ -52,7 +52,7 @@ async function getMergedPullRequest(
   })
   console.info('alternative List:', alternativeList)
 
-  const q2 = `repo:"${owner}/${repo}"+${sha}`
+  const q2 = encodeURIComponent(`repo:${owner}/${repo} type:pr`)
   console.log('query 2:', q)
   const { data } = octokit.rest.search.issuesAndPullRequests({
     q: q2,
