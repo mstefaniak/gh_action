@@ -53,7 +53,7 @@ async function getMergedPullRequest(
   console.info('List size:', alternativeList.total_count)
   console.info('Found:', alternativeList.items.map(p => p.merge_commit_sha))
 
-  const q2 = `repo:${owner}/${repo} type:pr is:merged merged:${sha}`
+  const q2 = `repo:${owner}/${repo} type:pr is:merged ${sha}`
   console.log('query 2:', q)
   const { data } = await octokit.rest.search.issuesAndPullRequests({
     q: q2,
