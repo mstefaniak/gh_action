@@ -1,6 +1,5 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-const { getMergedPullRequest } = require('./getMergedPullRequest')
 
 async function run() {
   try {
