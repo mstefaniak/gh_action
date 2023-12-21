@@ -5,6 +5,7 @@ const { getMergedPullRequest } = require('./getMergedPullRequest')
 async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
+    console.log('token length:', token.length)
     const repo = process.env.REPO
     const owner = process.env.OWNER
     const sha = process.env.COMMIT_SHA
