@@ -4,7 +4,6 @@ const github = require('@actions/github')
 async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
-    console.log('token length:', token.length)
     const repo = process.env.REPO
     const owner = process.env.OWNER
     const sha = process.env.COMMIT_SHA
@@ -50,6 +49,7 @@ async function getMergedPullRequest(
   })
   
   if (alternativeList.total_count === 1) {
+    console.log('found:', alternativeList.items[0])
     const { title, body, number, labels, assignees } = alternativeList.items[0]
     return {
       title,
