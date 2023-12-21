@@ -50,34 +50,30 @@ async function getMergedPullRequest(
     order: 'desc',
     per_page: 100
   })
-  console.info('List size:', alternativeList.total_count)
-  console.info('Found:', alternativeList.items.map(p => p.merge_commit_sha))
-
-  const q2 = `repo:${owner}/${repo} type:pr is:merged ${sha}`
-  console.log('query 2:', q)
-  const { data } = await octokit.rest.search.issuesAndPullRequests({
-    q: q2,
-    sort: 'updated',
-    order: 'desc',
-    per_page: 100
-  })
-  console.info('List 2 size:', data.total_count)
-  console.info('Found 2:', data.items.map(p => p.merge_commit_sha))
-
   
-  const { data: list } = await octokit.rest.pulls.list({
-    owner,
-    repo,
-    sort: 'updated',
-    direction: 'desc',
-    state: 'closed',
-    per_page: 100
-  })
+  let pull = null
+  if (alternativeList.total_count === 1) {
+    pull = alternativeList.items[0]
+    console.info('Found:', alternativeList.items[0])
+  } else if (alternativeList.total_count > 1) {
+    console.error('Found more than one pull request')
+  } else {
+    console.error('Pull request not found')
+  }
+  
+  // const { data: list } = await octokit.rest.pulls.list({
+  //   owner,
+  //   repo,
+  //   sort: 'updated',
+  //   direction: 'desc',
+  //   state: 'closed',
+  //   per_page: 100
+  // })
 
-  console.info('looking for: ', sha)
-  console.info('list:', list.map(p => p.merge_commit_sha))
-  const pull = list.find(p => p.merge_commit_sha === sha)
-  console.info('found:', !!pull)
+  // console.info('looking for: ', sha)
+  // console.info('list:', list.map(p => p.merge_commit_sha))
+  // const pull = list.find(p => p.merge_commit_sha === sha)
+  // console.info('found:', !!pull)
   if (!pull) {
     return null
   }
