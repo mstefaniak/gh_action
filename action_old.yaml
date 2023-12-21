@@ -1,0 +1,42 @@
+name: Validate Command Deploy Params
+description: Validates the command deploy parameters
+inputs:
+  build_status:
+    description: The build job result
+    required: true
+  init_status:
+    description: The init job result
+    required: true
+  comment-id:
+    description: The comment id to update
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Prepare result
+      id: prepare-result
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        INIT_STATUS: ${{ inputs.init_status }}
+        BUILD_STATUS: ${{ inputs.build_status }}
+      run: |
+        node ./result.js $INIT_STATUS $BUILD_STATUS
+
+    - name: Prepare message
+      id: prepare-msg
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        RESULT: ${{ fromJSON(steps.prepare-result.outputs.result) }}
+      run: |
+        node ./message.js $RESULT
+
+    - name: Update comment
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        comment-id: ${{ inputs.comment-id }}
+        body: ${{ fromJSON(steps.prepare-msg.outputs.body) }}
+        reactions: ${{ fromJSON(steps.prepare-msg.outputs.reactions) }}
+          

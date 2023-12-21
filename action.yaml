@@ -1,42 +1,56 @@
-name: Validate Command Deploy Params
-description: Validates the command deploy parameters
+name: Action Get Merged Pull Request
+description: Get the pull request merged with base branch.
+
 inputs:
-  build_status:
-    description: The build job result
+  commit_sha:
+    description: The commit SHA to get the pull request merged with base branch.
     required: true
-  init_status:
-    description: The init job result
+  github_token:
+    description: A GitHub token.
     required: true
-  comment-id:
-    description: The comment id to update
+  owner:
+    description: The owner of the repository.
     required: true
+  repo:
+    description: The name of the repository.
+    required: true
+
+outputs:
+  title:
+    description: The title of the pull request.
+    value: ${{ steps.get-pull-request.outputs.title }}
+  body:
+    description: The body of the pull request.
+    value: ${{ steps.get-pull-request.outputs.body }}
+  number:
+    description: The number of the pull request.
+    value: ${{ steps.get-pull-request.outputs.number }}
+  labels:
+    description: The list of labels for the pull request. Separated with line breaks if there're multiple labels.
+    value: ${{ steps.get-pull-request.outputs.labels }}
+  assignees:
+    description: The list of assignees for the pull request. Separated with line breaks if there're multiple assignees.
+    value: ${{ steps.get-pull-request.outputs.assignees }}
 
 runs:
   using: composite
   steps:
-    - name: Prepare result
-      id: prepare-result
-      shell: bash
-      working-directory: ${{ github.action_path }}
-      env:
-        INIT_STATUS: ${{ inputs.init_status }}
-        BUILD_STATUS: ${{ inputs.build_status }}
-      run: |
-        node ./result.js $INIT_STATUS $BUILD_STATUS
-
-    - name: Prepare message
-      id: prepare-msg
-      shell: bash
-      working-directory: ${{ github.action_path }}
-      env:
-        RESULT: ${{ fromJSON(steps.prepare-result.outputs.result) }}
-      run: |
-        node ./message.js $RESULT
-
-    - name: Update comment
-      uses: peter-evans/create-or-update-comment@v3
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
       with:
-        comment-id: ${{ inputs.comment-id }}
-        body: ${{ fromJSON(steps.prepare-msg.outputs.body) }}
-        reactions: ${{ fromJSON(steps.prepare-msg.outputs.reactions) }}
-          
+        node-version: '>=20.x'
+    - name: Install action dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: yarn install --frozen-lockfile
+
+    - name: Get pull request
+      id: get-pull-request
+      working-directory: ${{ github.action_path }}
+      shell: bash
+      env:
+        COMMIT_SHA: ${{ inputs.commit_sha }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        OWNER: ${{ inputs.owner }}
+        REPO: ${{ inputs.repo }}
+      run: node index.js
