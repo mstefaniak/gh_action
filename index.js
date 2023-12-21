@@ -42,49 +42,29 @@ async function getMergedPullRequest(
 ) {
   const octokit = github.getOctokit(githubToken)
 
-  const q = `repo:${owner}/${repo} type:pr is:merged hash:${sha}`
-  console.log('query:', q)
   const { data: alternativeList } = await octokit.rest.search.issuesAndPullRequests({
-    q,
+    q: `repo:${owner}/${repo} type:pr is:merged hash:${sha}`,
     sort: 'updated',
     order: 'desc',
     per_page: 100
   })
   
-  let pull = null
   if (alternativeList.total_count === 1) {
-    pull = alternativeList.items[0]
-    console.info('Found:', alternativeList.items[0])
+    const { title, body, number, labels, assignees } = alternativeList.items[0]
+    return {
+      title,
+      body,
+      number,
+      labels: labels.map(l => l.name),
+      assignees: assignees.map(a => a.login)
+    }
   } else if (alternativeList.total_count > 1) {
     console.error('Found more than one pull request')
-  } else {
-    console.error('Pull request not found')
-  }
-  
-  // const { data: list } = await octokit.rest.pulls.list({
-  //   owner,
-  //   repo,
-  //   sort: 'updated',
-  //   direction: 'desc',
-  //   state: 'closed',
-  //   per_page: 100
-  // })
-
-  // console.info('looking for: ', sha)
-  // console.info('list:', list.map(p => p.merge_commit_sha))
-  // const pull = list.find(p => p.merge_commit_sha === sha)
-  // console.info('found:', !!pull)
-  if (!pull) {
     return null
-  }
-
-  return {
-    title: pull.title,
-    body: pull.body,
-    number: pull.number,
-    labels: pull.labels.map(l => l.name),
-    assignees: pull.assignees.map(a => a.login)
-  }
+  } 
+  
+  console.error('Pull request not found')
+  return null
 }
 
 run()
