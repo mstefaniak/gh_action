@@ -49,7 +49,6 @@ async function getMergedPullRequest(
   })
   
   if (alternativeList.total_count === 1) {
-    console.log('found:', alternativeList.items[0])
     const { title, body, number, labels, assignees } = alternativeList.items[0]
     return {
       title,
